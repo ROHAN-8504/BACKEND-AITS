@@ -2,6 +2,8 @@ const express = require('express')
 const cors=require('cors')
 const app = express()
 const dotenv=require('dotenv')
+const bcrypt=require('bcrypt')
+const jwt=require('jsonwebtoken')
 dotenv.config();
 const port = 3000
 //middlewares
@@ -12,6 +14,8 @@ app.use(express.json())
 let db=require('./src/config/db')
 let products= require('./src/models/product.model')
 let users=require('./src/models/users.model')
+let sendmails=require('./gmail')
+
 //health check
 app.get('/health',(req,res)=>{
 res.json({"msg":"server is active"})
@@ -83,13 +87,35 @@ app.post('/register',async (req,res)=>{
    let hashpassword= await bcrypt.hash(password,10)
   await  users.create({username,password:hashpassword,email,role})
   res.json({"msg":"Registration succesfull"})
+  return await sendmails(email,username);
   } catch (error) {
     res.json({msg:error.message})
   }
 })
 
 
-
+//login
+app.post('/login',async (req,res)=>{
+try {
+  const {username,password}=req.body
+if(!username || !password) return res.json({"msg":"missing fields"})
+  //checking username
+  let checkusername=await users.findOne({username})
+  if(!checkusername) return res.json({"msg":"user not found"})
+  //checking password
+  let hashedpassword=checkusername.password
+  //cpmpare the password
+ let match= await bcrypt.compare(password,hashedpassword)
+  if(!match) return res.json({"msg":"username or password is wrong"})
+    //generate a token and send that token to client
+  //payload secretkey  expiry date
+  let secretkey="rohansecret"
+  let token=await jwt.sign({username:username},secretkey,{expiresIn:'1hr'})
+    res.json({"msg":"login succesfull",token})
+} catch (error) {
+  res.json({"msg":error.message})
+}
+})
 
 
 

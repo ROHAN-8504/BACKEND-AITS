@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "asynckit": "^0.4.0",
+    "bcrypt": "^6.0.0",
     "call-bind-apply-helpers": "^1.0.2",
     "combined-stream": "^1.0.8",
     "cors": "^2.8.6",
@@ -26,10 +27,12 @@
     "has-symbols": "^1.1.0",
     "has-tostringtag": "^1.0.2",
     "hasown": "^2.0.3",
+    "jsonwebtoken": "^9.0.3",
     "math-intrinsics": "^1.1.0",
     "mime-db": "^1.52.0",
     "mime-types": "^2.1.35",
     "mongoose": "^9.6.1",
+    "nodemailer": "^8.0.7",
     "proxy-from-env": "^2.1.0"
   },
   "scripts": {
