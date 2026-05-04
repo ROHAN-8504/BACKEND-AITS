@@ -43,6 +43,15 @@ app.get('/products',async (req,res)=>{
   }
 })
 
+app.post('/allproducts',async (req,res)=>{
+  try {
+    await products.insertMany(req.body)
+    res.status(201).json({"msg":"products are uploaded"}) 
+  } catch (error) {
+    res.json({"MSG":error.message})
+  }
+})
+
 app.get('/products/:id',async (req,res)=>{
   try {
     let productid=req.params.id
@@ -109,7 +118,7 @@ if(!username || !password) return res.json({"msg":"missing fields"})
   if(!match) return res.json({"msg":"username or password is wrong"})
     //generate a token and send that token to client
   //payload secretkey  expiry date
-  let secretkey="rohansecret"
+  let secretkey=process.env.SECRETKEY
   let token=await jwt.sign({username:username},secretkey,{expiresIn:'1hr'})
     res.json({"msg":"login succesfull",token})
 } catch (error) {
