@@ -45,7 +45,7 @@ app.get('/products',async (req,res)=>{
 
 app.post('/allproducts',async (req,res)=>{
   try {
-    await products.insertMany(req.body)
+    await products.insertMany(req.body  )
     res.status(201).json({"msg":"products are uploaded"}) 
   } catch (error) {
     res.json({"MSG":error.message})
